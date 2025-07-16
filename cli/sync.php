@@ -14,62 +14,62 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 /**
- * CLI update for moodec enrolments expiration.
- *
- * Notes:
- *   - it is required to use the web server account when executing PHP CLI scripts
- *   - you need to change the "www-data" to match the apache user account
- *   - use "su" if "sudo" not available
+ * CLI script for syncing Moodec enrolments and sending expiry notifications.
  *
  * @package    enrol_moodec
- * @copyright  2012 Petr Skoda {@link http://skodak.org}
+ * @copyright  2012 Petr Skoda
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define('CLI_SCRIPT', true);
 
-require __DIR__ . '/../../../config.php';
-require_once "$CFG->libdir/clilib.php";
+require_once(__DIR__ . '/../../../config.php');
+require_once($CFG->libdir . '/clilib.php');
 
-// Now get cli options.
-list($options, $unrecognized) = cli_get_params(array('verbose' => false, 'help' => false), array('v' => 'verbose', 'h' => 'help'));
+// Define CLI options.
+[$options, $unrecognized] = cli_get_params(
+    ['verbose' => false, 'help' => false],
+    ['v' => 'verbose', 'h' => 'help']
+);
 
-if ($unrecognized) {
-	$unrecognized = implode("\n  ", $unrecognized);
-	cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+if (!empty($unrecognized)) {
+    cli_error(get_string('cliunknowoption', 'admin', implode("\n  ", $unrecognized)));
 }
 
-if ($options['help']) {
-	$help =
-	"Execute moodec enrolments expiration sync and send notifications.
+if (!empty($options['help'])) {
+    $help = <<<EOT
+Execute Moodec enrolment expiration sync and send notifications.
 
 Options:
 -v, --verbose         Print verbose progress information
--h, --help            Print out this help
+-h, --help            Show this help message
 
 Example:
-\$ sudo -u www-data /usr/bin/php enrol/self/moodec/sync.php
-";
+\$ sudo -u www-data /usr/bin/php local/moodec/cli/sync.php
+EOT;
 
-	echo $help;
-	die;
+    cli_writeln($help);
+    exit(0);
 }
 
 if (!enrol_is_enabled('moodec')) {
-	cli_error('enrol_moodec plugin is disabled, synchronisation stopped', 2);
+    cli_error('enrol_moodec plugin is disabled. Synchronisation aborted.', 2);
 }
 
-if (empty($options['verbose'])) {
-	$trace = new null_progress_trace();
-} else {
-	$trace = new text_progress_trace();
-}
+// Create progress trace depending on verbosity.
+$trace = !empty($options['verbose']) ? new text_progress_trace() : new null_progress_trace();
 
-/** @var $plugin enrol_moodec_plugin */
+// Load the plugin and execute sync + expiry notifications.
 $plugin = enrol_get_plugin('moodec');
 
-$result = $plugin->sync($trace, null);
+if (!$plugin) {
+    cli_error('Moodec enrolment plugin could not be loaded.', 3);
+}
+
+$result = $plugin->sync($trace);
 $plugin->send_expiry_notifications($trace);
 
 exit($result);
