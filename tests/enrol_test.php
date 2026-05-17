@@ -30,7 +30,6 @@ namespace enrol_moodec;
  * @covers \enrol_moodec_plugin
  */
 final class enrol_test extends \advanced_testcase {
-
     /**
      * The plugin resolves and only one instance is allowed per course.
      *
@@ -47,12 +46,10 @@ final class enrol_test extends \advanced_testcase {
 
         $instanceid = $plugin->add_instance($course);
         $this->assertNotNull($instanceid);
-        $this->assertEquals(1,
-            $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'moodec']));
+        $this->assertEquals(1, $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'moodec']));
 
         $this->assertNull($plugin->add_instance($course));
-        $this->assertEquals(1,
-            $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'moodec']));
+        $this->assertEquals(1, $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'moodec']));
     }
 
     /**

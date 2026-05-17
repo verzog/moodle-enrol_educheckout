@@ -28,7 +28,6 @@ namespace enrol_moodec\task;
  * Replaces the legacy enrol cron() for expiry handling.
  */
 class sync_enrolments extends \core\task\scheduled_task {
-
     /**
      * Returns the task name shown in the scheduled tasks admin UI.
      *
@@ -40,6 +39,8 @@ class sync_enrolments extends \core\task\scheduled_task {
 
     /**
      * Run the moodec enrolment expiry sync.
+     *
+     * @return void
      */
     public function execute() {
         $plugin = enrol_get_plugin('moodec');

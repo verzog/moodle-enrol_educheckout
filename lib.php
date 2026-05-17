@@ -26,13 +26,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Moodec enrolment plugin implementation.
  */
 class enrol_moodec_plugin extends enrol_plugin {
-
     /** @var stdClass|null cached enroller user */
     protected $lastenroller = null;
 
@@ -98,8 +95,7 @@ class enrol_moodec_plugin extends enrol_plugin {
 
         $context = context_course::instance($courseid, MUST_EXIST);
 
-        if (!has_capability('moodle/course:enrolconfig', $context)
-                || !has_capability('enrol/moodec:config', $context)) {
+        if (!has_capability('moodle/course:enrolconfig', $context) || !has_capability('enrol/moodec:config', $context)) {
             return null;
         }
 
@@ -125,11 +121,11 @@ class enrol_moodec_plugin extends enrol_plugin {
             $notifyall = 0;
         }
         $fields = [
-            'status'          => $this->get_config('status'),
-            'roleid'          => $this->get_config('roleid', 0),
-            'enrolperiod'     => $this->get_config('enrolperiod', 0),
-            'expirynotify'    => $expirynotify,
-            'notifyall'       => $notifyall,
+            'status' => $this->get_config('status'),
+            'roleid' => $this->get_config('roleid', 0),
+            'enrolperiod' => $this->get_config('enrolperiod', 0),
+            'expirynotify' => $expirynotify,
+            'notifyall' => $notifyall,
             'expirythreshold' => $this->get_config('expirythreshold', 86400),
         ];
         return $this->add_instance($course, $fields);
@@ -159,7 +155,7 @@ class enrol_moodec_plugin extends enrol_plugin {
      */
     protected function get_status_options() {
         return [
-            ENROL_INSTANCE_ENABLED  => get_string('yes'),
+            ENROL_INSTANCE_ENABLED => get_string('yes'),
             ENROL_INSTANCE_DISABLED => get_string('no'),
         ];
     }
@@ -186,25 +182,40 @@ class enrol_moodec_plugin extends enrol_plugin {
      * @return void
      */
     public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
-        $mform->addElement('select', 'status', get_string('status', 'enrol_moodec'),
-            $this->get_status_options());
+        $mform->addElement('select', 'status', get_string('status', 'enrol_moodec'), $this->get_status_options());
 
         $roles = $this->extend_assignable_roles($context, $instance->roleid);
         $mform->addElement('select', 'roleid', get_string('defaultrole', 'enrol_moodec'), $roles);
 
-        $mform->addElement('duration', 'enrolperiod', get_string('enrolperiod', 'enrol_moodec'),
-            ['optional' => true, 'defaultunit' => 86400]);
+        $mform->addElement(
+            'duration',
+            'enrolperiod',
+            get_string('enrolperiod', 'enrol_moodec'),
+            ['optional' => true, 'defaultunit' => 86400]
+        );
 
-        $mform->addElement('select', 'expirynotify', get_string('expirynotify', 'core_enrol'),
-            $this->get_expirynotify_options());
+        $mform->addElement(
+            'select',
+            'expirynotify',
+            get_string('expirynotify', 'core_enrol'),
+            $this->get_expirynotify_options()
+        );
 
-        $mform->addElement('duration', 'expirythreshold', get_string('expirythreshold', 'core_enrol'),
-            ['optional' => false, 'defaultunit' => 86400]);
+        $mform->addElement(
+            'duration',
+            'expirythreshold',
+            get_string('expirythreshold', 'core_enrol'),
+            ['optional' => false, 'defaultunit' => 86400]
+        );
         $mform->hideIf('expirythreshold', 'expirynotify', 'eq', 0);
 
         if (enrol_accessing_via_instance($instance)) {
-            $mform->addElement('static', 'selfwarn', get_string('instanceeditselfwarning', 'core_enrol'),
-                get_string('instanceeditselfwarningtext', 'core_enrol'));
+            $mform->addElement(
+                'static',
+                'selfwarn',
+                get_string('instanceeditselfwarning', 'core_enrol'),
+                get_string('instanceeditselfwarningtext', 'core_enrol')
+            );
         }
     }
 
@@ -248,8 +259,8 @@ class enrol_moodec_plugin extends enrol_plugin {
         $trace->output('Verifying moodec enrolment expiration...');
 
         $params = [
-            'now'         => time(),
-            'useractive'  => ENROL_USER_ACTIVE,
+            'now' => time(),
+            'useractive' => ENROL_USER_ACTIVE,
             'courselevel' => CONTEXT_COURSE,
         ];
         $coursesql = '';
@@ -274,18 +285,12 @@ class enrol_moodec_plugin extends enrol_plugin {
                     $instances[$ue->enrolid] = $DB->get_record('enrol', ['id' => $ue->enrolid]);
                 }
                 $instance = $instances[$ue->enrolid];
-                role_unassign_all([
-                    'userid'    => $ue->userid,
-                    'contextid' => $ue->contextid,
-                    'component' => '',
-                    'itemid'    => 0,
-                ], true);
+                role_unassign_all(['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0], true);
                 $this->unenrol_user($instance, $ue->userid);
                 $trace->output("unenrolling expired user $ue->userid from course $instance->courseid", 1);
             }
             $rs->close();
             unset($instances);
-
         } else if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES || $action == ENROL_EXT_REMOVED_SUSPEND) {
             $instances = [];
             $sql = "SELECT ue.*, e.courseid, c.id AS contextid
@@ -302,12 +307,7 @@ class enrol_moodec_plugin extends enrol_plugin {
                 }
                 $instance = $instances[$ue->enrolid];
                 if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES) {
-                    role_unassign_all([
-                        'userid'    => $ue->userid,
-                        'contextid' => $ue->contextid,
-                        'component' => '',
-                        'itemid'    => 0,
-                    ], true);
+                    role_unassign_all(['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0], true);
                     $this->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
                     $trace->output("suspending expired user $ue->userid in course $instance->courseid, roles unassigned", 1);
                 } else {
@@ -321,7 +321,6 @@ class enrol_moodec_plugin extends enrol_plugin {
 
         $trace->output('...moodec enrolment updates finished.');
         $trace->finished();
-
         return 0;
     }
 
@@ -338,8 +337,7 @@ class enrol_moodec_plugin extends enrol_plugin {
             return $this->lastenroller;
         }
 
-        $instance = $DB->get_record('enrol',
-            ['id' => $instanceid, 'enrol' => $this->get_name()], '*', MUST_EXIST);
+        $instance = $DB->get_record('enrol', ['id' => $instanceid, 'enrol' => $this->get_name()], '*', MUST_EXIST);
         $context = context_course::instance($instance->courseid);
 
         if ($users = get_enrolled_users($context, 'enrol/moodec:manage')) {
@@ -351,7 +349,6 @@ class enrol_moodec_plugin extends enrol_plugin {
         }
 
         $this->lastenrollerinstanceid = $instanceid;
-
         return $this->lastenroller;
     }
 
@@ -371,13 +368,21 @@ class enrol_moodec_plugin extends enrol_plugin {
 
         if ($this->allow_unenrol_user($instance, $ue) && has_capability('enrol/moodec:unenrol', $context)) {
             $url = new moodle_url('/enrol/unenroluser.php', $params);
-            $actions[] = new user_enrolment_action(new pix_icon('t/delete', ''),
-                get_string('unenrol', 'core_enrol'), $url, ['class' => 'unenrollink', 'rel' => $ue->id]);
+            $actions[] = new user_enrolment_action(
+                new pix_icon('t/delete', ''),
+                get_string('unenrol', 'core_enrol'),
+                $url,
+                ['class' => 'unenrollink', 'rel' => $ue->id]
+            );
         }
         if ($this->allow_manage($instance) && has_capability('enrol/moodec:manage', $context)) {
             $url = new moodle_url('/enrol/editenrolment.php', $params);
-            $actions[] = new user_enrolment_action(new pix_icon('t/edit', ''),
-                get_string('edit'), $url, ['class' => 'editenrollink', 'rel' => $ue->id]);
+            $actions[] = new user_enrolment_action(
+                new pix_icon('t/edit', ''),
+                get_string('edit'),
+                $url,
+                ['class' => 'editenrollink', 'rel' => $ue->id]
+            );
         }
         return $actions;
     }
@@ -394,8 +399,7 @@ class enrol_moodec_plugin extends enrol_plugin {
     public function restore_instance(restore_enrolments_structure_step $step, stdClass $data, $course, $oldid) {
         global $DB;
 
-        if ($instances = $DB->get_records('enrol',
-                ['courseid' => $data->courseid, 'enrol' => 'moodec'], 'id')) {
+        if ($instances = $DB->get_records('enrol', ['courseid' => $data->courseid, 'enrol' => 'moodec'], 'id')) {
             $instance = reset($instances);
             $instanceid = $instance->id;
         } else {
@@ -414,8 +418,13 @@ class enrol_moodec_plugin extends enrol_plugin {
      * @param int $oldinstancestatus
      * @return void
      */
-    public function restore_user_enrolment(restore_enrolments_structure_step $step, $data, $instance, $userid,
-            $oldinstancestatus) {
+    public function restore_user_enrolment(
+        restore_enrolments_structure_step $step,
+        $data,
+        $instance,
+        $userid,
+        $oldinstancestatus
+    ) {
         global $DB;
 
         $ue = $DB->get_record('user_enrolments', ['enrolid' => $instance->id, 'userid' => $userid]);

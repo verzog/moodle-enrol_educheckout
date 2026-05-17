@@ -29,7 +29,6 @@ namespace enrol_moodec\privacy;
  * enrolment data is owned and described by the core enrolment subsystem.
  */
 class provider implements \core_privacy\local\metadata\null_provider {
-
     /**
      * Reason why this plugin stores no personal data.
      *

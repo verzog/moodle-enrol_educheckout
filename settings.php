@@ -26,46 +26,63 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-
-    $settings->add(new admin_setting_configselect('enrol_moodec/status',
+    $setting = new admin_setting_configselect(
+        'enrol_moodec/status',
         get_string('status', 'enrol_moodec'),
         get_string('status_desc', 'enrol_moodec'),
         ENROL_INSTANCE_ENABLED,
         [
-            ENROL_INSTANCE_ENABLED  => get_string('yes'),
+            ENROL_INSTANCE_ENABLED => get_string('yes'),
             ENROL_INSTANCE_DISABLED => get_string('no'),
-        ]));
+        ]
+    );
+    $settings->add($setting);
 
     if (!during_initial_install()) {
         $options = get_default_enrol_roles(context_system::instance());
         $student = get_archetype_roles('student');
         $student = reset($student);
-        $settings->add(new admin_setting_configselect('enrol_moodec/roleid',
+        $setting = new admin_setting_configselect(
+            'enrol_moodec/roleid',
             get_string('defaultrole', 'enrol_moodec'),
             get_string('defaultrole_desc', 'enrol_moodec'),
             $student ? $student->id : null,
-            $options));
+            $options
+        );
+        $settings->add($setting);
     }
 
-    $settings->add(new admin_setting_configduration('enrol_moodec/enrolperiod',
+    $setting = new admin_setting_configduration(
+        'enrol_moodec/enrolperiod',
         get_string('enrolperiod', 'enrol_moodec'),
-        get_string('enrolperiod_desc', 'enrol_moodec'), 0));
+        get_string('enrolperiod_desc', 'enrol_moodec'),
+        0
+    );
+    $settings->add($setting);
 
-    $settings->add(new admin_setting_configselect('enrol_moodec/expiredaction',
+    $setting = new admin_setting_configselect(
+        'enrol_moodec/expiredaction',
         get_string('expiredaction', 'enrol_moodec'),
         get_string('expiredaction_help', 'enrol_moodec'),
         ENROL_EXT_REMOVED_KEEP,
         [
-            ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'core_enrol'),
+            ENROL_EXT_REMOVED_KEEP => get_string('extremovedkeep', 'core_enrol'),
             ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'core_enrol'),
-            ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'core_enrol'),
-        ]));
+            ENROL_EXT_REMOVED_UNENROL => get_string('extremovedunenrol', 'core_enrol'),
+        ]
+    );
+    $settings->add($setting);
 
     $hours = [];
     for ($i = 0; $i < 24; $i++) {
         $hours[$i] = $i;
     }
-    $settings->add(new admin_setting_configselect('enrol_moodec/expirynotifyhour',
+    $setting = new admin_setting_configselect(
+        'enrol_moodec/expirynotifyhour',
         get_string('expirynotifyhour', 'enrol_moodec'),
-        get_string('expirynotifyhour_desc', 'enrol_moodec'), 6, $hours));
+        get_string('expirynotifyhour_desc', 'enrol_moodec'),
+        6,
+        $hours
+    );
+    $settings->add($setting);
 }
