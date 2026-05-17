@@ -15,18 +15,23 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Version details for the moodec enrolment plugin.
+ * Scheduled task definitions for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
- * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026051700;
-$plugin->requires  = 2025041400; // Moodle 5.0.
-$plugin->component = 'enrol_moodec';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '5.0.0';
+$tasks = [
+    [
+        'classname' => 'enrol_moodec\\task\\sync_enrolments',
+        'blocking'  => 0,
+        'minute'    => 'R',
+        'hour'      => '*',
+        'day'       => '*',
+        'month'     => '*',
+        'dayofweek' => '*',
+    ],
+];

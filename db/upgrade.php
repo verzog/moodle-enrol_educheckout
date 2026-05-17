@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,53 +12,33 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * This file keeps track of upgrades to the moodec enrolment plugin
+ * Upgrade steps for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
- * @copyright  2012 Petr Skoda {@link http://skodak.org
+ * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Upgrade the moodec enrolment plugin.
+ *
+ * @param int $oldversion the version we are upgrading from
+ * @return bool
+ */
 function xmldb_enrol_moodec_upgrade($oldversion) {
-	global $CFG, $DB, $OUTPUT;
+    global $DB;
 
-	$dbman = $DB->get_manager();
+    if ($oldversion < 2026051700) {
+        // Modernisation to the Moodle 5.0+ baseline. The plugin stores no
+        // tables of its own (it uses the core enrol/user_enrolments tables),
+        // so there is no schema change here.
+        upgrade_plugin_savepoint(true, 2026051700, 'enrol', 'moodec');
+    }
 
-	// Moodle v2.3.0 release upgrade line
-	// Put any upgrade step following this
-
-	if ($oldversion < 2012100702) {
-		// Set default expiry threshold to 1 day.
-		$DB->execute("UPDATE {enrol} SET expirythreshold = 86400 WHERE enrol = 'moodec' AND expirythreshold = 0");
-		upgrade_plugin_savepoint(true, 2012100702, 'enrol', 'moodec');
-	}
-
-	if ($oldversion < 2012101400) {
-		// Delete obsoleted settings, now using expiry* prefix to make them more consistent.
-		unset_config('notifylast', 'enrol_moodec');
-		unset_config('notifyhour', 'enrol_moodec');
-		upgrade_plugin_savepoint(true, 2012101400, 'enrol', 'moodec');
-	}
-
-	// Moodle v2.4.0 release upgrade line
-	// Put any upgrade step following this
-
-	// Moodle v2.5.0 release upgrade line.
-	// Put any upgrade step following this.
-
-	// Moodle v2.6.0 release upgrade line.
-	// Put any upgrade step following this.
-
-	// Moodle v2.7.0 release upgrade line.
-	// Put any upgrade step following this.
-
-	// Moodle v2.8.0 release upgrade line.
-	// Put any upgrade step following this.
-
-	return true;
+    return true;
 }
