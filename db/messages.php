@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,18 +12,21 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Defines message providers for moodec enrolments.
+ * Message provider definitions for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
- * @copyright  2012 Petr Skoda {@link http://skodak.org}
+ * @copyright  2010 Petr Skoda {@link http://skodak.org}
+ * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$messageproviders = array(
+defined('MOODLE_INTERNAL') || die();
 
-	'expiry_notification' => array(),
-
-);
+$messageproviders = [
+    'expiry_notification' => [
+        'capability' => 'enrol/moodec:manage',
+    ],
+];

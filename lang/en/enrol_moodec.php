@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,62 +12,44 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'enrol_moodec', language 'en'.
+ * Strings for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright  2010 Petr Skoda {@link http://skodak.org}
+ * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['alterstatus'] = 'Alter status';
-$string['altertimeend'] = 'Alter end time';
-$string['altertimestart'] = 'Alter start time';
-$string['assignrole'] = 'Assign role';
-$string['browseusers'] = 'Browse users';
-$string['browsecohorts'] = 'Browse cohorts';
-$string['confirmbulkdeleteenrolment'] = 'Are you sure you want to delete these users enrolments?';
-$string['defaultperiod'] = 'Default enrolment duration';
-$string['defaultperiod_desc'] = 'Default length of time that the enrolment is valid. If set to zero, the enrolment duration will be unlimited by default.';
-$string['defaultperiod_help'] = 'Default length of time that the enrolment is valid, starting with the moment the user is enrolled. If disabled, the enrolment duration will be unlimited by default.';
-$string['deleteselectedusers'] = 'Delete selected user enrolments';
-$string['editselectedusers'] = 'Edit selected user enrolments';
-$string['enrolledincourserole'] = 'Enrolled in "{$a->course}" as "{$a->role}"';
-$string['enrolusers'] = 'Enrol users';
-$string['expiredaction'] = 'Enrolment expiration action';
-$string['expiredaction_help'] = 'Select action to carry out when user enrolment expires. Please note that some user data and settings are purged from course during course unenrolment.';
-$string['expirymessageenrollersubject'] = 'Enrolment expiry notification';
-$string['expirymessageenrollerbody'] = 'Enrolment in the course \'{$a->course}\' will expire within the next {$a->threshold} for the following users:
-
-{$a->users}
-
-To extend their enrolment, go to {$a->extendurl}';
-$string['expirymessageenrolledsubject'] = 'Enrolment expiry notification';
+$string['defaultrole'] = 'Default role assignment';
+$string['defaultrole_desc'] = 'Select the role which should be assigned to users enrolled via Moodec.';
+$string['enrolperiod'] = 'Default enrolment duration';
+$string['enrolperiod_desc'] = 'Default length of time that an enrolment is valid. If set to zero, the enrolment duration is unlimited by default.';
+$string['expiredaction'] = 'Enrolment expiry action';
+$string['expiredaction_help'] = 'Select the action to carry out when a user enrolment expires. Note that some user data and settings are purged from the course during course unenrolment.';
 $string['expirymessageenrolledbody'] = 'Dear {$a->user},
 
 This is a notification that your enrolment in the course \'{$a->course}\' is due to expire on {$a->timeend}.
 
 If you need help, please contact {$a->enroller}.';
-$string['moodec:config'] = 'Configure Moodec enrol instances';
-$string['moodec:enrol'] = 'Enrol users';
-$string['moodec:manage'] = 'Manage user enrolments';
-$string['moodec:unenrol'] = 'Unenrol users from the course';
-$string['moodec:unenrolself'] = 'Unenrol self from the course';
+$string['expirymessageenrolledsubject'] = 'Moodec enrolment expiry notification';
+$string['expirymessageenrollerbody'] = 'Moodec enrolment in the course \'{$a->course}\' will expire within the next {$a->threshold} for the following users:
+
+{$a->users}
+
+To extend their enrolment, go to {$a->extendurl}.';
+$string['expirymessageenrollersubject'] = 'Moodec enrolment expiry notification';
+$string['expirynotifyhour'] = 'Hour to send enrolment expiry notifications';
+$string['expirynotifyhour_desc'] = 'The hour of the day at which enrolment expiry notifications are sent.';
 $string['messageprovider:expiry_notification'] = 'Moodec enrolment expiry notifications';
-$string['pluginname'] = 'Moodec';
-$string['pluginname_desc'] = 'The Moodec enrolments plugin allows users to be enrolled moodecly via a link in the course administration settings, by a user with appropriate permissions such as a teacher. The plugin should normally be enabled, since certain other enrolment plugins, such as self enrolment, require it.';
+$string['moodec:config'] = 'Configure Moodec enrolment instances';
+$string['moodec:enrol'] = 'Enrol users into a course via Moodec';
+$string['moodec:manage'] = 'Manage enrolled users';
+$string['moodec:unenrol'] = 'Unenrol users from the course';
+$string['pluginname'] = 'Moodec enrolment';
+$string['privacy:metadata'] = 'The Moodec enrolment plugin does not store any personal data; it relies on the core enrolment subsystem.';
 $string['status'] = 'Enable Moodec enrolments';
-$string['status_desc'] = 'Allow course access of internally enrolled users. This should be kept enabled in most cases.';
-$string['status_help'] = 'This setting determines whether users can be enrolled moodecly, via a link in the course administration settings, by a user with appropriate permissions such as a teacher.';
-$string['statusenabled'] = 'Enabled';
-$string['statusdisabled'] = 'Disabled';
-$string['unenrol'] = 'Unenrol user';
-$string['unenrolselectedusers'] = 'Unenrol selected users';
-$string['unenrolselfconfirm'] = 'Do you really want to unenrol yourself from course "{$a}"?';
-$string['unenroluser'] = 'Do you really want to unenrol "{$a->user}" from course "{$a->course}"?';
-$string['unenrolusers'] = 'Unenrol users';
-$string['wscannotenrol'] = 'Plugin instance cannot moodecly enrol a user in the course id = {$a->courseid}';
-$string['wsnoinstance'] = 'Moodec enrolment plugin instance doesn\'t exist or is disabled for the course (id = {$a->courseid})';
-$string['wsusercannotassign'] = 'You don\'t have the permission to assign this role ({$a->roleid}) to this user ({$a->userid}) in this course({$a->courseid}).';
+$string['status_desc'] = 'Allow course access to users enrolled via the Moodec storefront.';
+$string['tasksyncenrolments'] = 'Synchronise Moodec enrolment expirations';

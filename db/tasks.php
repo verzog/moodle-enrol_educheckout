@@ -15,28 +15,23 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Upgrade steps for the moodec enrolment plugin.
+ * Scheduled task definitions for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/**
- * Upgrade the moodec enrolment plugin.
- *
- * @param int $oldversion the version we are upgrading from
- * @return bool
- */
-function xmldb_enrol_moodec_upgrade($oldversion) {
-    global $DB;
+defined('MOODLE_INTERNAL') || die();
 
-    if ($oldversion < 2026051700) {
-        // Modernisation to the Moodle 5.0+ baseline. The plugin stores no
-        // tables of its own (it uses the core enrol/user_enrolments tables),
-        // so there is no schema change here.
-        upgrade_plugin_savepoint(true, 2026051700, 'enrol', 'moodec');
-    }
-
-    return true;
-}
+$tasks = [
+    [
+        'classname' => 'enrol_moodec\\task\\sync_enrolments',
+        'blocking'  => 0,
+        'minute'    => 'R',
+        'hour'      => '*',
+        'day'       => '*',
+        'month'     => '*',
+        'dayofweek' => '*',
+    ],
+];

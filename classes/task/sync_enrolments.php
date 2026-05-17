@@ -15,28 +15,41 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Upgrade steps for the moodec enrolment plugin.
+ * Scheduled task that syncs moodec enrolment expirations.
  *
  * @package    enrol_moodec
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/**
- * Upgrade the moodec enrolment plugin.
- *
- * @param int $oldversion the version we are upgrading from
- * @return bool
- */
-function xmldb_enrol_moodec_upgrade($oldversion) {
-    global $DB;
+namespace enrol_moodec\task;
 
-    if ($oldversion < 2026051700) {
-        // Modernisation to the Moodle 5.0+ baseline. The plugin stores no
-        // tables of its own (it uses the core enrol/user_enrolments tables),
-        // so there is no schema change here.
-        upgrade_plugin_savepoint(true, 2026051700, 'enrol', 'moodec');
+/**
+ * Replaces the legacy enrol cron() for expiry handling.
+ */
+class sync_enrolments extends \core\task\scheduled_task {
+    /**
+     * Returns the task name shown in the scheduled tasks admin UI.
+     *
+     * @return string
+     */
+    public function get_name() {
+        return get_string('tasksyncenrolments', 'enrol_moodec');
     }
 
-    return true;
+    /**
+     * Run the moodec enrolment expiry sync.
+     *
+     * @return void
+     */
+    public function execute() {
+        $plugin = enrol_get_plugin('moodec');
+        if (!$plugin) {
+            return;
+        }
+        $trace = new \text_progress_trace();
+        $plugin->sync($trace, null);
+        $plugin->send_expiry_notifications($trace);
+        $trace->finished();
+    }
 }

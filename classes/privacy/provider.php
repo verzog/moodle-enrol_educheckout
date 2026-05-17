@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,19 +12,29 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * moodec enrol plugin installation script
+ * Privacy provider for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
- * @copyright  2010 Petr Skoda {@link http://skodak.org}
+ * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace enrol_moodec\privacy;
 
-function xmldb_enrol_moodec_install() {
-	global $CFG;
-
+/**
+ * The moodec enrolment plugin stores no personal data of its own; user
+ * enrolment data is owned and described by the core enrolment subsystem.
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
+    /**
+     * Reason why this plugin stores no personal data.
+     *
+     * @return string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
 }
