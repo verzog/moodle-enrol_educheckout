@@ -2,10 +2,16 @@ name: moodle-ci
 
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 env:
   TZ: Australia/Sydney
+
+concurrency:
+  group: moodle-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
