@@ -285,7 +285,8 @@ class enrol_moodec_plugin extends enrol_plugin {
                     $instances[$ue->enrolid] = $DB->get_record('enrol', ['id' => $ue->enrolid]);
                 }
                 $instance = $instances[$ue->enrolid];
-                role_unassign_all(['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0], true);
+                $ras = ['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0];
+                role_unassign_all($ras, true);
                 $this->unenrol_user($instance, $ue->userid);
                 $trace->output("unenrolling expired user $ue->userid from course $instance->courseid", 1);
             }
@@ -307,7 +308,8 @@ class enrol_moodec_plugin extends enrol_plugin {
                 }
                 $instance = $instances[$ue->enrolid];
                 if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES) {
-                    role_unassign_all(['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0], true);
+                    $ras = ['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0];
+                    role_unassign_all($ras, true);
                     $this->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
                     $trace->output("suspending expired user $ue->userid in course $instance->courseid, roles unassigned", 1);
                 } else {
