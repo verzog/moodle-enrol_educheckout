@@ -2,7 +2,8 @@
 
 Status: **DESIGN ONLY — no implementation in this PR.** Companion to the
 `local_moodec` cart rebuild (`verzog/moodle-local_moodec` PR #1). Governed by the
-same AU Moodle plugin standard; **target Moodle 5.0+ / PHP 8.2+**.
+same AU Moodle plugin standard; **target Moodle 5.0+ / PHP 8.2+**. Open questions
+resolved (§6).
 
 ## 1. Why this exists
 
@@ -43,7 +44,9 @@ enrol management.
 - `edit.php` + `edit_form.php` — standard instance edit form (status, default
   role, enrol period, expiry notify/threshold).
 - `settings.php` — admin defaults (status, role, enrol period, expiry).
-- `db/access.php` — the five capabilities (kept; cleaned).
+- `db/access.php` — capabilities, **cleaned and reduced**: drop
+  `enrol/moodec:unenrolself` (self-unenrol is not offered — see §6.1). Keep
+  `config`, `enrol`, `manage`, `unenrol`.
 - `db/install.php` (default-instance-on-existing-courses), `db/upgrade.php`
   (incrementing savepoints from a 5.0 baseline).
 - `lang/en/enrol_moodec.php` — ascending byte order, no section comments,
@@ -67,13 +70,11 @@ enrol management.
 - `externallib.php` + `db/services.php` — bespoke web services not used by the
   cart (the cart calls the PHP enrol API directly).
 - `locallib.php` + `bulkchangeforms.php` + `manage.php` — bespoke bulk/manage
-  UI; core enrolment manager covers admin needs for v1. (If course-level bulk
-  ops are wanted later, re-add via the modern core bulk-operation API — flagged,
-  not v1.)
-- `unenrolself.php` — self-unenrol page; the `enrol/moodec:unenrolself`
-  capability is retained but self-unenrol (if needed) routes through standard
-  course unenrol. Confirm whether buyers should be able to self-unenrol
-  (Open Question 1).
+  UI. Course-level bulk operations are **confirmed not needed for v1** (§6.3);
+  core enrolment manager covers admin needs. (Re-add later via the modern core
+  bulk-operation API if ever required.)
+- `unenrolself.php` — self-unenrol page. **Confirmed: buyers cannot
+  self-unenrol** from a paid enrolment (§6.1); page and capability removed.
 
 ## 3. Legal / attribution (carry-over from the licensing review)
 
@@ -86,13 +87,16 @@ enrol management.
 
 - Own `.github/workflows/moodle-ci.yml` (from `moodle-plugin-ci`
   `gha.dist.yml`), `env: TZ: Australia/Sydney`, matrix PHP 8.2/8.3 ×
-  `mysqli`/`pgsql`, Moodle 5.0+ branches, warnings-as-failures.
+  `mysqli`/`pgsql`, Moodle 5.0+ branches, warnings-as-failures, triggered on
+  `main`.
 - README to the `tool_pluginskel` template; GPLv3 block matching headers.
 - `local_moodec`'s `version.php` dependency on `enrol_moodec` is bumped to this
   rebuild's new version (coordinated across the two PRs).
-- Implementation merges into the `moodle_enrol_moodec50` branch (mirrors the
-  `local_moodec` Decision 1 of targeting its `Moodle-Local_moodle5.0` branch);
-  confirm (Open Question 2).
+- **Integration branch: `main`** (project-wide standardisation — see
+  `local_moodec` design §11 / Decision 1). This supersedes the earlier
+  `moodle_enrol_moodec50` target. `main` is created/standardised as the
+  Moodle 5.0+ integration line; making it the repo default is a one-off GitHub
+  admin step done at implementation start.
 
 ## 5. Tests
 
@@ -102,12 +106,13 @@ enrol management.
 - Behat: add the Moodec enrolment method to a course; verify a user enrolled by
   the cart appears active; expiry suspends access. DD/MM/YYYY in scenarios.
 
-## 6. Open questions
+## 6. Resolved decisions
 
-1. **Self-unenrol**: should buyers be able to self-unenrol from a purchased
-   course (keep a minimal self-unenrol path), or is unenrol admin-only?
-   Recommended: admin-only for a paid enrolment (no self-unenrol page).
-2. **Target branch**: confirm implementation merges into
-   `moodle_enrol_moodec50` (mirroring the `local_moodec` 5.0 branch choice).
-3. **Bulk operations**: confirm course-level bulk enrol/edit is **not** needed
-   for v1 (re-add later via the modern core bulk API if required).
+1. **Self-unenrol — admin-only.** Buyers cannot self-unenrol from a paid
+   enrolment. `unenrolself.php` and the `enrol/moodec:unenrolself` capability
+   are removed; unenrol is performed by admins/teachers via the core enrolment
+   pages.
+2. **Target branch — confirmed.** Implementation integrates on **`main`**
+   (project standardised on `main`; supersedes `moodle_enrol_moodec50`).
+3. **Bulk operations — not in v1.** Course-level bulk enrol/edit is out of
+   scope; can be re-added later via the modern core bulk API if needed.
