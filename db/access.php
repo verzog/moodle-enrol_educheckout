@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,65 +12,54 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Capabilities for moodec enrolment plugin.
+ * Capability definitions for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
+ * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-	/* Add, edit or remove moodec enrol instance. */
-	'enrol/moodec:config' => array(
-		'captype' => 'write',
-		'contextlevel' => CONTEXT_COURSE,
-		'archetypes' => array(
-			'manager' => CAP_ALLOW,
-		),
-	),
+    'enrol/moodec:config' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
-	/* Enrol anybody. */
-	'enrol/moodec:enrol' => array(
-		'captype' => 'write',
-		'contextlevel' => CONTEXT_COURSE,
-		'archetypes' => array(
-			'manager' => CAP_ALLOW,
-			'editingteacher' => CAP_ALLOW,
-		),
-	),
+    'enrol/moodec:enrol' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+        ],
+    ],
 
-	/* Manage enrolments of users. */
-	'enrol/moodec:manage' => array(
-		'captype' => 'write',
-		'contextlevel' => CONTEXT_COURSE,
-		'archetypes' => array(
-			'manager' => CAP_ALLOW,
-			'editingteacher' => CAP_ALLOW,
-		),
-	),
+    'enrol/moodec:manage' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+        ],
+    ],
 
-	/* Unenrol anybody (including self) - watch out for data loss. */
-	'enrol/moodec:unenrol' => array(
-		'captype' => 'write',
-		'contextlevel' => CONTEXT_COURSE,
-		'archetypes' => array(
-			'manager' => CAP_ALLOW,
-			'editingteacher' => CAP_ALLOW,
-		),
-	),
+    'enrol/moodec:unenrol' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+        ],
+    ],
 
-	/* Unenrol self - watch out for data loss. */
-	'enrol/moodec:unenrolself' => array(
-		'captype' => 'write',
-		'contextlevel' => CONTEXT_COURSE,
-		'archetypes' => array(
-		),
-	),
-
-);
+];

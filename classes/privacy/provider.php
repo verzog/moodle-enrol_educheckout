@@ -15,18 +15,27 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Message provider definitions for the moodec enrolment plugin.
+ * Privacy provider for the moodec enrolment plugin.
  *
  * @package    enrol_moodec
- * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace enrol_moodec\privacy;
 
-$messageproviders = [
-    'expiry_notification' => [
-        'capability' => 'enrol/moodec:manage',
-    ],
-];
+/**
+ * The moodec enrolment plugin stores no personal data of its own; user
+ * enrolment data is owned and described by the core enrolment subsystem.
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Reason why this plugin stores no personal data.
+     *
+     * @return string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}
