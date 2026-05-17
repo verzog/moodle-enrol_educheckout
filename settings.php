@@ -43,7 +43,7 @@ if ($ADMIN->fulltree) {
         $settings->add(new admin_setting_configselect('enrol_moodec/roleid',
             get_string('defaultrole', 'enrol_moodec'),
             get_string('defaultrole_desc', 'enrol_moodec'),
-            $student->id ?? null,
+            $student ? $student->id : null,
             $options));
     }
 
