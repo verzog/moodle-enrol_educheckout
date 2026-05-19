@@ -138,7 +138,7 @@ class enrol_moodec_plugin extends enrol_plugin {
      * @param array|null $fields
      * @return int|null instance id
      */
-    public function add_instance($course, array $fields = null) {
+    public function add_instance($course, ?array $fields = null) {
         global $DB;
 
         if ($DB->record_exists('enrol', ['courseid' => $course->id, 'enrol' => 'moodec'])) {
