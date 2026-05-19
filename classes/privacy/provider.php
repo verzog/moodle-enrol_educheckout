@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Privacy provider for the moodec enrolment plugin.
+ * Privacy provider for the educheckout enrolment plugin.
  *
- * @package    enrol_moodec
+ * @package    enrol_educheckout
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_moodec\privacy;
+namespace enrol_educheckout\privacy;
 
 /**
- * The moodec enrolment plugin stores no personal data of its own; user
+ * The educheckout enrolment plugin stores no personal data of its own; user
  * enrolment data is owned and described by the core enrolment subsystem.
  */
 class provider implements \core_privacy\local\metadata\null_provider {

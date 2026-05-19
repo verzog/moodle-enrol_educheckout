@@ -15,14 +15,14 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Scheduled task that syncs moodec enrolment expirations.
+ * Scheduled task that syncs educheckout enrolment expirations.
  *
- * @package    enrol_moodec
+ * @package    enrol_educheckout
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_moodec\task;
+namespace enrol_educheckout\task;
 
 /**
  * Replaces the legacy enrol cron() for expiry handling.
@@ -34,16 +34,16 @@ class sync_enrolments extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('tasksyncenrolments', 'enrol_moodec');
+        return get_string('tasksyncenrolments', 'enrol_educheckout');
     }
 
     /**
-     * Run the moodec enrolment expiry sync.
+     * Run the educheckout enrolment expiry sync.
      *
      * @return void
      */
     public function execute() {
-        $plugin = enrol_get_plugin('moodec');
+        $plugin = enrol_get_plugin('educheckout');
         if (!$plugin) {
             return;
         }

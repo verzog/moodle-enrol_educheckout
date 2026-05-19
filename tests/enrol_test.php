@@ -15,19 +15,19 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Tests for the moodec enrolment plugin.
+ * Tests for the educheckout enrolment plugin.
  *
- * @package    enrol_moodec
+ * @package    enrol_educheckout
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_moodec;
+namespace enrol_educheckout;
 
 /**
- * Unit tests for enrol_moodec_plugin.
+ * Unit tests for enrol_educheckout_plugin.
  *
- * @covers \enrol_moodec_plugin
+ * @covers \enrol_educheckout_plugin
  */
 final class enrol_test extends \advanced_testcase {
     /**
@@ -39,17 +39,17 @@ final class enrol_test extends \advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        $plugin = enrol_get_plugin('moodec');
-        $this->assertInstanceOf(\enrol_moodec_plugin::class, $plugin);
+        $plugin = enrol_get_plugin('educheckout');
+        $this->assertInstanceOf(\enrol_educheckout_plugin::class, $plugin);
 
         $course = $this->getDataGenerator()->create_course();
 
         $instanceid = $plugin->add_instance($course);
         $this->assertNotNull($instanceid);
-        $this->assertEquals(1, $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'moodec']));
+        $this->assertEquals(1, $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'educheckout']));
 
         $this->assertNull($plugin->add_instance($course));
-        $this->assertEquals(1, $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'moodec']));
+        $this->assertEquals(1, $DB->count_records('enrol', ['courseid' => $course->id, 'enrol' => 'educheckout']));
     }
 
     /**
@@ -61,7 +61,7 @@ final class enrol_test extends \advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        $plugin = enrol_get_plugin('moodec');
+        $plugin = enrol_get_plugin('educheckout');
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
 
