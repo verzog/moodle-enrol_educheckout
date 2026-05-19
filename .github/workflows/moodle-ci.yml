@@ -30,10 +30,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
-      mariadb:
-        image: mariadb:10.11
+      mysql:
+        image: mysql:8.4
         env:
-          MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
         ports:
           - 3306:3306
@@ -41,7 +40,8 @@ jobs:
           --health-cmd="mysqladmin ping"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 3
+          --health-retries 5
+          --health-start-period 30s
 
     strategy:
       fail-fast: false
