@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Admin settings for the moodec enrolment plugin.
+ * Admin settings for the educheckout enrolment plugin.
  *
- * @package    enrol_moodec
+ * @package    enrol_educheckout
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,9 +27,9 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     $setting = new admin_setting_configselect(
-        'enrol_moodec/status',
-        get_string('status', 'enrol_moodec'),
-        get_string('status_desc', 'enrol_moodec'),
+        'enrol_educheckout/status',
+        get_string('status', 'enrol_educheckout'),
+        get_string('status_desc', 'enrol_educheckout'),
         ENROL_INSTANCE_ENABLED,
         [
             ENROL_INSTANCE_ENABLED => get_string('yes'),
@@ -43,9 +43,9 @@ if ($ADMIN->fulltree) {
         $student = get_archetype_roles('student');
         $student = reset($student);
         $setting = new admin_setting_configselect(
-            'enrol_moodec/roleid',
-            get_string('defaultrole', 'enrol_moodec'),
-            get_string('defaultrole_desc', 'enrol_moodec'),
+            'enrol_educheckout/roleid',
+            get_string('defaultrole', 'enrol_educheckout'),
+            get_string('defaultrole_desc', 'enrol_educheckout'),
             $student ? $student->id : null,
             $options
         );
@@ -53,17 +53,17 @@ if ($ADMIN->fulltree) {
     }
 
     $setting = new admin_setting_configduration(
-        'enrol_moodec/enrolperiod',
-        get_string('enrolperiod', 'enrol_moodec'),
-        get_string('enrolperiod_desc', 'enrol_moodec'),
+        'enrol_educheckout/enrolperiod',
+        get_string('enrolperiod', 'enrol_educheckout'),
+        get_string('enrolperiod_desc', 'enrol_educheckout'),
         0
     );
     $settings->add($setting);
 
     $setting = new admin_setting_configselect(
-        'enrol_moodec/expiredaction',
-        get_string('expiredaction', 'enrol_moodec'),
-        get_string('expiredaction_help', 'enrol_moodec'),
+        'enrol_educheckout/expiredaction',
+        get_string('expiredaction', 'enrol_educheckout'),
+        get_string('expiredaction_help', 'enrol_educheckout'),
         ENROL_EXT_REMOVED_KEEP,
         [
             ENROL_EXT_REMOVED_KEEP => get_string('extremovedkeep', 'core_enrol'),
@@ -78,9 +78,9 @@ if ($ADMIN->fulltree) {
         $hours[$i] = $i;
     }
     $setting = new admin_setting_configselect(
-        'enrol_moodec/expirynotifyhour',
-        get_string('expirynotifyhour', 'enrol_moodec'),
-        get_string('expirynotifyhour_desc', 'enrol_moodec'),
+        'enrol_educheckout/expirynotifyhour',
+        get_string('expirynotifyhour', 'enrol_educheckout'),
+        get_string('expirynotifyhour_desc', 'enrol_educheckout'),
         6,
         $hours
     );

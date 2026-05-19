@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Moodec enrolment plugin main library.
+ * EduCheckout enrolment plugin main library.
  *
  * Derived from the Moodle core manual enrolment plugin, trimmed to the
- * subset required by the local_moodec storefront (cart-driven enrolment).
+ * subset required by the local_educheckout storefront (cart-driven enrolment).
  *
- * @package    enrol_moodec
+ * @package    enrol_educheckout
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * Moodec enrolment plugin implementation.
+ * EduCheckout enrolment plugin implementation.
  */
-class enrol_moodec_plugin extends enrol_plugin {
+class enrol_educheckout_plugin extends enrol_plugin {
     /** @var stdClass|null cached enroller user */
     protected $lastenroller = null;
 
@@ -95,15 +95,15 @@ class enrol_moodec_plugin extends enrol_plugin {
 
         $context = context_course::instance($courseid, MUST_EXIST);
 
-        if (!has_capability('moodle/course:enrolconfig', $context) || !has_capability('enrol/moodec:config', $context)) {
+        if (!has_capability('moodle/course:enrolconfig', $context) || !has_capability('enrol/educheckout:config', $context)) {
             return null;
         }
 
-        if ($DB->record_exists('enrol', ['courseid' => $courseid, 'enrol' => 'moodec'])) {
+        if ($DB->record_exists('enrol', ['courseid' => $courseid, 'enrol' => 'educheckout'])) {
             return null;
         }
 
-        return new moodle_url('/enrol/editinstance.php', ['type' => 'moodec', 'courseid' => $courseid]);
+        return new moodle_url('/enrol/editinstance.php', ['type' => 'educheckout', 'courseid' => $courseid]);
     }
 
     /**
@@ -132,7 +132,7 @@ class enrol_moodec_plugin extends enrol_plugin {
     }
 
     /**
-     * Add a new instance. Only one moodec instance is allowed per course.
+     * Add a new instance. Only one educheckout instance is allowed per course.
      *
      * @param stdClass $course
      * @param array|null $fields
@@ -141,7 +141,7 @@ class enrol_moodec_plugin extends enrol_plugin {
     public function add_instance($course, ?array $fields = null) {
         global $DB;
 
-        if ($DB->record_exists('enrol', ['courseid' => $course->id, 'enrol' => 'moodec'])) {
+        if ($DB->record_exists('enrol', ['courseid' => $course->id, 'enrol' => 'educheckout'])) {
             return null;
         }
 
@@ -182,15 +182,15 @@ class enrol_moodec_plugin extends enrol_plugin {
      * @return void
      */
     public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
-        $mform->addElement('select', 'status', get_string('status', 'enrol_moodec'), $this->get_status_options());
+        $mform->addElement('select', 'status', get_string('status', 'enrol_educheckout'), $this->get_status_options());
 
         $roles = $this->extend_assignable_roles($context, $instance->roleid);
-        $mform->addElement('select', 'roleid', get_string('defaultrole', 'enrol_moodec'), $roles);
+        $mform->addElement('select', 'roleid', get_string('defaultrole', 'enrol_educheckout'), $roles);
 
         $mform->addElement(
             'duration',
             'enrolperiod',
-            get_string('enrolperiod', 'enrol_moodec'),
+            get_string('enrolperiod', 'enrol_educheckout'),
             ['optional' => true, 'defaultunit' => 86400]
         );
 
@@ -239,7 +239,7 @@ class enrol_moodec_plugin extends enrol_plugin {
     }
 
     /**
-     * Scheduled-task entry point: expire moodec enrolments.
+     * Scheduled-task entry point: expire educheckout enrolments.
      *
      * @param progress_trace $trace
      * @param int|null $courseid limit to one course, null means all
@@ -248,7 +248,7 @@ class enrol_moodec_plugin extends enrol_plugin {
     public function sync(progress_trace $trace, $courseid = null) {
         global $DB;
 
-        if (!enrol_is_enabled('moodec')) {
+        if (!enrol_is_enabled('educheckout')) {
             $trace->finished();
             return 2;
         }
@@ -256,7 +256,7 @@ class enrol_moodec_plugin extends enrol_plugin {
         core_php_time_limit::raise();
         raise_memory_limit(MEMORY_HUGE);
 
-        $trace->output('Verifying moodec enrolment expiration...');
+        $trace->output('Verifying educheckout enrolment expiration...');
 
         $params = [
             'now' => time(),
@@ -275,7 +275,7 @@ class enrol_moodec_plugin extends enrol_plugin {
             $instances = [];
             $sql = "SELECT ue.*, e.courseid, c.id AS contextid
                       FROM {user_enrolments} ue
-                      JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'moodec')
+                      JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
                       JOIN {context} c ON (c.instanceid = e.courseid AND c.contextlevel = :courselevel)
                      WHERE ue.timeend > 0 AND ue.timeend < :now
                            $coursesql";
@@ -296,7 +296,7 @@ class enrol_moodec_plugin extends enrol_plugin {
             $instances = [];
             $sql = "SELECT ue.*, e.courseid, c.id AS contextid
                       FROM {user_enrolments} ue
-                      JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'moodec')
+                      JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
                       JOIN {context} c ON (c.instanceid = e.courseid AND c.contextlevel = :courselevel)
                      WHERE ue.timeend > 0 AND ue.timeend < :now
                            AND ue.status = :useractive
@@ -321,13 +321,13 @@ class enrol_moodec_plugin extends enrol_plugin {
             unset($instances);
         }
 
-        $trace->output('...moodec enrolment updates finished.');
+        $trace->output('...educheckout enrolment updates finished.');
         $trace->finished();
         return 0;
     }
 
     /**
-     * The user responsible for moodec enrolments in the given instance.
+     * The user responsible for educheckout enrolments in the given instance.
      *
      * @param int $instanceid
      * @return stdClass user record
@@ -342,7 +342,7 @@ class enrol_moodec_plugin extends enrol_plugin {
         $instance = $DB->get_record('enrol', ['id' => $instanceid, 'enrol' => $this->get_name()], '*', MUST_EXIST);
         $context = context_course::instance($instance->courseid);
 
-        if ($users = get_enrolled_users($context, 'enrol/moodec:manage')) {
+        if ($users = get_enrolled_users($context, 'enrol/educheckout:manage')) {
             $users = sort_by_roleassignment_authority($users, $context);
             $this->lastenroller = reset($users);
             unset($users);
@@ -368,7 +368,7 @@ class enrol_moodec_plugin extends enrol_plugin {
         $params = $manager->get_moodlepage()->url->params();
         $params['ue'] = $ue->id;
 
-        if ($this->allow_unenrol_user($instance, $ue) && has_capability('enrol/moodec:unenrol', $context)) {
+        if ($this->allow_unenrol_user($instance, $ue) && has_capability('enrol/educheckout:unenrol', $context)) {
             $url = new moodle_url('/enrol/unenroluser.php', $params);
             $actions[] = new user_enrolment_action(
                 new pix_icon('t/delete', ''),
@@ -377,7 +377,7 @@ class enrol_moodec_plugin extends enrol_plugin {
                 ['class' => 'unenrollink', 'rel' => $ue->id]
             );
         }
-        if ($this->allow_manage($instance) && has_capability('enrol/moodec:manage', $context)) {
+        if ($this->allow_manage($instance) && has_capability('enrol/educheckout:manage', $context)) {
             $url = new moodle_url('/enrol/editenrolment.php', $params);
             $actions[] = new user_enrolment_action(
                 new pix_icon('t/edit', ''),
@@ -401,7 +401,7 @@ class enrol_moodec_plugin extends enrol_plugin {
     public function restore_instance(restore_enrolments_structure_step $step, stdClass $data, $course, $oldid) {
         global $DB;
 
-        if ($instances = $DB->get_records('enrol', ['courseid' => $data->courseid, 'enrol' => 'moodec'], 'id')) {
+        if ($instances = $DB->get_records('enrol', ['courseid' => $data->courseid, 'enrol' => 'educheckout'], 'id')) {
             $instance = reset($instances);
             $instanceid = $instance->id;
         } else {
@@ -496,7 +496,7 @@ class enrol_moodec_plugin extends enrol_plugin {
      */
     public function can_delete_instance($instance) {
         $context = context_course::instance($instance->courseid);
-        return has_capability('enrol/moodec:config', $context);
+        return has_capability('enrol/educheckout:config', $context);
     }
 
     /**
@@ -507,6 +507,6 @@ class enrol_moodec_plugin extends enrol_plugin {
      */
     public function can_hide_show_instance($instance) {
         $context = context_course::instance($instance->courseid);
-        return has_capability('enrol/moodec:config', $context);
+        return has_capability('enrol/educheckout:config', $context);
     }
 }

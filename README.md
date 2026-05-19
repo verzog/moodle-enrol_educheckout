@@ -1,7 +1,7 @@
-# Moodec enrolment (enrol_moodec)
+# EduCheckout enrolment (enrol_educheckout)
 
-Moodec enrolment is the enrolment method used by the
-[local_moodec](https://github.com/verzog/moodle-local_moodec) storefront. When a
+EduCheckout enrolment is the enrolment method used by the
+[local_educheckout](https://github.com/verzog/moodle-local_educheckout) storefront. When a
 learner completes a purchase, the storefront enrols them into the purchased
 course(s) through this plugin (group assignment and enrolment duration are
 handled per product).
@@ -12,7 +12,7 @@ enrolment plugin, targeting **Moodle 5.0+ / PHP 8.2+**.
 ## Requirements
 
 - Moodle 5.0 or later.
-- The `local_moodec` storefront plugin (which declares this plugin as a
+- The `local_educheckout` storefront plugin (which declares this plugin as a
   dependency).
 
 ## Installing via uploaded ZIP file
@@ -27,10 +27,21 @@ enrolment plugin, targeting **Moodle 5.0+ / PHP 8.2+**.
 
 The plugin can also be installed by putting the contents of this directory into
 
-    {your/moodle/dirroot}/enrol/moodec
+    {your/moodle/dirroot}/enrol/educheckout
 
 Then, log in to your Moodle site as an admin and go to
 _Site administration > Notifications_ to complete the installation.
+
+## Credits and acknowledgements
+
+EduCheckout enrolment is a rename and continuation of the **Moodec enrolment
+plugin** (`enrol_moodec`) originally written in 2015 by **Thomas Threadgold**
+at **LearningWorks Ltd**
+([github.com/LearningWorks](https://github.com/LearningWorks)). The plugin
+itself is in turn a derivative of Moodle's core **manual enrolment plugin**
+(`enrol_manual`), originally written by **Petr Skoda** ([skodak.org](http://skodak.org)).
+
+Sincere thanks to both for the prior art this codebase is built on.
 
 ## License
 
@@ -47,4 +58,6 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 
 Derived from the Moodle core manual enrolment plugin,
-Copyright (C) 2010 Petr Skoda; modifications Copyright (C) 2026 LearningWorks Ltd.
+Copyright (C) 2010 Petr Skoda; original Moodec enrolment plugin,
+Copyright (C) 2015 Thomas Threadgold / LearningWorks Ltd; renaming and
+ongoing maintenance Copyright (C) 2026 the EduCheckout contributors.

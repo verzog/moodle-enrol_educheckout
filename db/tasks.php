@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Scheduled task definitions for the moodec enrolment plugin.
+ * Scheduled task definitions for the educheckout enrolment plugin.
  *
- * @package    enrol_moodec
+ * @package    enrol_educheckout
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
     [
-        'classname' => 'enrol_moodec\\task\\sync_enrolments',
+        'classname' => 'enrol_educheckout\\task\\sync_enrolments',
         'blocking'  => 0,
         'minute'    => 'R',
         'hour'      => '*',

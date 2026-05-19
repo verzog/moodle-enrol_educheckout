@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Message provider definitions for the moodec enrolment plugin.
+ * Message provider definitions for the educheckout enrolment plugin.
  *
- * @package    enrol_moodec
+ * @package    enrol_educheckout
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,6 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $messageproviders = [
     'expiry_notification' => [
-        'capability' => 'enrol/moodec:manage',
+        'capability' => 'enrol/educheckout:manage',
     ],
 ];
