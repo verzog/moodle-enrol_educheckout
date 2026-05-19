@@ -38,6 +38,18 @@ function xmldb_enrol_educheckout_install() {
 
     $DB->set_field('config_plugins', 'plugin', 'enrol_educheckout', ['plugin' => 'enrol_moodec']);
 
+    $enabled = get_config(null, 'enrol_plugins_enabled');
+    if ($enabled !== false) {
+        $names = array_filter(array_map('trim', explode(',', $enabled)));
+        if (in_array('moodec', $names, true)) {
+            $names = array_values(array_unique(array_map(
+                fn($n) => $n === 'moodec' ? 'educheckout' : $n,
+                $names
+            )));
+            set_config('enrol_plugins_enabled', implode(',', $names));
+        }
+    }
+
     $caps = $DB->get_records_sql(
         "SELECT id, capability FROM {role_capabilities} WHERE " . $DB->sql_like('capability', '?'),
         ['enrol/moodec:%']

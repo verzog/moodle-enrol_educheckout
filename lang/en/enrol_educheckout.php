@@ -25,6 +25,10 @@
 
 $string['defaultrole'] = 'Default role assignment';
 $string['defaultrole_desc'] = 'Select the role which should be assigned to users enrolled via EduCheckout.';
+$string['educheckout:config'] = 'Configure EduCheckout enrolment instances';
+$string['educheckout:enrol'] = 'Enrol users into a course via EduCheckout';
+$string['educheckout:manage'] = 'Manage enrolled users';
+$string['educheckout:unenrol'] = 'Unenrol users from the course';
 $string['enrolperiod'] = 'Default enrolment duration';
 $string['enrolperiod_desc'] = 'Default length of time that an enrolment is valid. If set to zero, the enrolment duration is unlimited by default.';
 $string['expiredaction'] = 'Enrolment expiry action';
@@ -44,10 +48,6 @@ $string['expirymessageenrollersubject'] = 'EduCheckout enrolment expiry notifica
 $string['expirynotifyhour'] = 'Hour to send enrolment expiry notifications';
 $string['expirynotifyhour_desc'] = 'The hour of the day at which enrolment expiry notifications are sent.';
 $string['messageprovider:expiry_notification'] = 'EduCheckout enrolment expiry notifications';
-$string['educheckout:config'] = 'Configure EduCheckout enrolment instances';
-$string['educheckout:enrol'] = 'Enrol users into a course via EduCheckout';
-$string['educheckout:manage'] = 'Manage enrolled users';
-$string['educheckout:unenrol'] = 'Unenrol users from the course';
 $string['pluginname'] = 'EduCheckout enrolment';
 $string['privacy:metadata'] = 'The EduCheckout enrolment plugin does not store any personal data; it relies on the core enrolment subsystem.';
 $string['status'] = 'Enable EduCheckout enrolments';
