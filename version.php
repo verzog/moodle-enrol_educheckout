@@ -19,6 +19,7 @@
  *
  * @package    enrol_educheckout
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
+ * @copyright  2015 Thomas Threadgold, LearningWorks Ltd
  * @copyright  2026 LearningWorks Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
