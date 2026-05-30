@@ -49,6 +49,12 @@ jobs:
         php: ['8.2', '8.3', '8.4']
         moodle-branch: ['MOODLE_500_STABLE', 'MOODLE_501_STABLE', 'MOODLE_502_STABLE', 'main']
         database: ['pgsql', 'mysqli']
+        exclude:
+          # Moodle 5.2+ requires PHP 8.3 or newer.
+          - php: '8.2'
+            moodle-branch: 'MOODLE_502_STABLE'
+          - php: '8.2'
+            moodle-branch: 'main'
 
     steps:
       - name: Check out repository code
