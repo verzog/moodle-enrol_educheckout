@@ -105,4 +105,4 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 Derived from the Moodle core manual enrolment plugin,
 Copyright (C) 2010 Petr Skoda; original Moodec enrolment plugin,
 Copyright (C) 2015 Thomas Threadgold / LearningWorks Ltd; renaming and
-ongoing maintenance Copyright (C) 2026 the EduCheckout contributors.
+ongoing maintenance Copyright (C) 2026 Vernon Spain.
