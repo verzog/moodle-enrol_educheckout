@@ -24,7 +24,7 @@
  * is a no-op.
  *
  * @package    enrol_educheckout
- * @copyright  2026 the EduCheckout contributors
+ * @copyright  2026 Vernon Spain
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
