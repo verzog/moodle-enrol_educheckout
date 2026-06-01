@@ -56,6 +56,12 @@ self-hosted course store:
 > The storefront declares `enrol_educheckout` as a dependency and the installer
 > will warn if it is missing.
 
+> **Migration from `enrol_moodec`:** the installer (`db/install.php`) performs a
+> one-shot rename of any legacy `enrol_moodec` rows (`mdl_enrol`,
+> `role_capabilities`, plugin config, scheduled tasks, message providers) to
+> `enrol_educheckout`. On a clean install with no prior Moodec data the
+> migration is a no-op.
+
 ## Installing manually
 
 The plugin can also be installed by putting the contents of this directory into
