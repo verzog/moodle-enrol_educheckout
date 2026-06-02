@@ -185,7 +185,7 @@ class enrol_educheckout_plugin extends enrol_plugin {
     public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
         $mform->addElement('select', 'status', get_string('status', 'enrol_educheckout'), $this->get_status_options());
 
-        $roles = $this->extend_assignable_roles($context, $instance->roleid);
+        $roles = get_default_enrol_roles($context, $instance->roleid);
         $mform->addElement('select', 'roleid', get_string('defaultrole', 'enrol_educheckout'), $roles);
 
         $mform->addElement(
