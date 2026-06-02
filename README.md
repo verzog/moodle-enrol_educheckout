@@ -9,7 +9,7 @@ configured per product variation.
 It is a minimal, standards-conformant derivative of Moodle's core manual
 enrolment plugin.
 
-**Version 1.0.0 — Moodle 5.0+ / PHP 8.2+**
+**Version 1.0.0 — Moodle 5.0–5.2 / PHP 8.2–8.4**
 
 ## The EduCheckout plugin suite
 
@@ -39,8 +39,8 @@ self-hosted course store:
 
 ## Requirements
 
-- Moodle 5.0 or later.
-- PHP 8.2 or later.
+- Moodle 5.0 to 5.2.
+- PHP 8.2 to 8.4.
 - The `local_educheckout` storefront plugin (which declares this plugin as a
   dependency).
 
