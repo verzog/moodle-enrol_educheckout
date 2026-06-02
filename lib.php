@@ -128,6 +128,8 @@ class enrol_educheckout_plugin extends enrol_plugin {
             'expirynotify' => $expirynotify,
             'notifyall' => $notifyall,
             'expirythreshold' => $this->get_config('expirythreshold', 86400),
+            'cost' => $this->get_config('cost', 0),
+            'currency' => $this->get_config('currency', 'AUD'),
         ];
         return $this->add_instance($course, $fields);
     }
@@ -146,7 +148,45 @@ class enrol_educheckout_plugin extends enrol_plugin {
             return null;
         }
 
+        if (is_array($fields) && array_key_exists('cost', $fields)) {
+            $fields['cost'] = self::normalise_cost($fields['cost']);
+        }
+
         return parent::add_instance($course, $fields);
+    }
+
+    /**
+     * Update an existing instance.
+     *
+     * Normalises the locale-formatted cost before delegating to core so the
+     * value persisted by the standard enrol save path matches the float
+     * validated in edit_instance_validation().
+     *
+     * @param stdClass $instance
+     * @param stdClass $data
+     * @return bool
+     */
+    public function update_instance($instance, $data) {
+        if (isset($data->cost)) {
+            $data->cost = self::normalise_cost($data->cost);
+        }
+        return parent::update_instance($instance, $data);
+    }
+
+    /**
+     * Coerce a cost input (possibly locale-formatted, e.g. "10,50") into a
+     * canonical decimal string suitable for {enrol}.cost storage. Returns
+     * '0' for unparseable input — validation will already have flagged it.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    protected static function normalise_cost($value): string {
+        $cost = unformat_float($value, true);
+        if ($cost === false || $cost === null) {
+            return '0';
+        }
+        return (string) (float) $cost;
     }
 
     /**
