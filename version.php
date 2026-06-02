@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026060201;
+$plugin->version   = 2026060300;
 $plugin->requires  = 2025041400; // Moodle 5.0.
 $plugin->component = 'enrol_educheckout';
 $plugin->maturity  = MATURITY_BETA;

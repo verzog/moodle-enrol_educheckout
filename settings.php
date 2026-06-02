@@ -60,6 +60,35 @@ if ($ADMIN->fulltree) {
     );
     $settings->add($setting);
 
+    $setting = new admin_setting_configtext(
+        'enrol_educheckout/cost',
+        get_string('cost', 'enrol_educheckout'),
+        get_string('cost_desc', 'enrol_educheckout'),
+        0,
+        PARAM_FLOAT,
+        4
+    );
+    $settings->add($setting);
+
+    $codes = \core_payment\helper::get_supported_currencies();
+    if (empty($codes)) {
+        $currencies = ['AUD' => get_string('AUD', 'core_currencies')];
+    } else {
+        $currencies = [];
+        foreach ($codes as $code) {
+            $currencies[$code] = new lang_string($code, 'core_currencies');
+        }
+        uasort($currencies, fn($a, $b) => strcmp((string) $a, (string) $b));
+    }
+    $setting = new admin_setting_configselect(
+        'enrol_educheckout/currency',
+        get_string('currency', 'enrol_educheckout'),
+        '',
+        'AUD',
+        $currencies
+    );
+    $settings->add($setting);
+
     $setting = new admin_setting_configselect(
         'enrol_educheckout/expiredaction',
         get_string('expiredaction', 'enrol_educheckout'),
