@@ -19,10 +19,11 @@ jobs:
 
     services:
       postgres:
-        # Pinned to a specific patch tag for reproducibility; swap to an
-        # immutable digest (postgres:16@sha256:...) if you want stricter
-        # pinning.
-        image: postgres:16.6
+        # Pulled via Google's read-only Docker Hub mirror to avoid the
+        # intermittent registry-1.docker.io reachability failures that
+        # otherwise kill service-container startup on GitHub Actions
+        # runners. The image is identical to docker.io/library/postgres:16.6.
+        image: mirror.gcr.io/library/postgres:16.6
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -34,7 +35,7 @@ jobs:
           --health-timeout 5s
           --health-retries 3
       mysql:
-        image: mysql:8.4.3
+        image: mirror.gcr.io/library/mysql:8.4.3
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
         ports:
