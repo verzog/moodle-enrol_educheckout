@@ -23,6 +23,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['cost'] = 'Enrolment fee';
+$string['cost_desc'] = 'Default fee per buyer when a new EduCheckout enrolment instance is added to a course. Course teams can change the fee per course on the enrolment instance.';
+$string['cost_help'] = 'Fee charged per buyer for this course. Variation prices on a storefront product override this when "use variation pricing" is enabled.';
+$string['costerror'] = 'The enrolment fee must be a non-negative number.';
+$string['currency'] = 'Currency';
 $string['defaultrole'] = 'Default role assignment';
 $string['defaultrole_desc'] = 'Select the role which should be assigned to users enrolled via EduCheckout.';
 $string['educheckout:config'] = 'Configure EduCheckout enrolment instances';

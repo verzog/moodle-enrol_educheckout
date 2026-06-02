@@ -128,6 +128,8 @@ class enrol_educheckout_plugin extends enrol_plugin {
             'expirynotify' => $expirynotify,
             'notifyall' => $notifyall,
             'expirythreshold' => $this->get_config('expirythreshold', 86400),
+            'cost' => $this->get_config('cost', 0),
+            'currency' => $this->get_config('currency', 'AUD'),
         ];
         return $this->add_instance($course, $fields);
     }
@@ -146,7 +148,45 @@ class enrol_educheckout_plugin extends enrol_plugin {
             return null;
         }
 
+        if (is_array($fields) && array_key_exists('cost', $fields)) {
+            $fields['cost'] = self::normalise_cost($fields['cost']);
+        }
+
         return parent::add_instance($course, $fields);
+    }
+
+    /**
+     * Update an existing instance.
+     *
+     * Normalises the locale-formatted cost before delegating to core so the
+     * value persisted by the standard enrol save path matches the float
+     * validated in edit_instance_validation().
+     *
+     * @param stdClass $instance
+     * @param stdClass $data
+     * @return bool
+     */
+    public function update_instance($instance, $data) {
+        if (isset($data->cost)) {
+            $data->cost = self::normalise_cost($data->cost);
+        }
+        return parent::update_instance($instance, $data);
+    }
+
+    /**
+     * Coerce a cost input (possibly locale-formatted, e.g. "10,50") into a
+     * canonical decimal string suitable for {enrol}.cost storage. Returns
+     * '0' for unparseable input — validation will already have flagged it.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    protected static function normalise_cost($value): string {
+        $cost = unformat_float($value, true);
+        if ($cost === false || $cost === null) {
+            return '0';
+        }
+        return (string) (float) $cost;
     }
 
     /**
@@ -187,6 +227,15 @@ class enrol_educheckout_plugin extends enrol_plugin {
 
         $roles = get_default_enrol_roles($context, $instance->roleid);
         $mform->addElement('select', 'roleid', get_string('defaultrole', 'enrol_educheckout'), $roles);
+
+        $mform->addElement('text', 'cost', get_string('cost', 'enrol_educheckout'), ['size' => 6]);
+        $mform->setType('cost', PARAM_RAW); // Validated by edit_instance_validation() — locale-aware unformat.
+        $mform->setDefault('cost', format_float($this->get_config('cost', 0), 2, true));
+        $mform->addHelpButton('cost', 'cost', 'enrol_educheckout');
+
+        $currencies = $this->get_currencies();
+        $mform->addElement('select', 'currency', get_string('currency', 'enrol_educheckout'), $currencies);
+        $mform->setDefault('currency', $this->get_config('currency', 'AUD'));
 
         $mform->addElement(
             'duration',
@@ -236,7 +285,38 @@ class enrol_educheckout_plugin extends enrol_plugin {
             $errors['expirythreshold'] = get_string('errorthresholdlow', 'core_enrol');
         }
 
+        // Accept locale-formatted decimals (e.g. "10,50" in fr_FR) by going via unformat_float.
+        if (array_key_exists('cost', $data)) {
+            $cost = unformat_float($data['cost'], true);
+            if ($cost === false || $cost < 0) {
+                $errors['cost'] = get_string('costerror', 'enrol_educheckout');
+            }
+        }
+
         return $errors;
+    }
+
+    /**
+     * Currencies offered for educheckout enrolment instances.
+     *
+     * Mirrors enrol_fee/enrol_paypal: pull the list from the core payment
+     * subsystem so a course-team picker only ever shows currencies a configured
+     * gateway will actually accept. Falls back to AUD-only when no gateway is
+     * enabled yet so the form still renders during initial setup.
+     *
+     * @return array currency code => display label
+     */
+    protected function get_currencies(): array {
+        $codes = \core_payment\helper::get_supported_currencies();
+        if (empty($codes)) {
+            return ['AUD' => get_string('AUD', 'core_currencies')];
+        }
+        $currencies = [];
+        foreach ($codes as $code) {
+            $currencies[$code] = new \lang_string($code, 'core_currencies');
+        }
+        uasort($currencies, fn($a, $b) => strcmp((string) $a, (string) $b));
+        return $currencies;
     }
 
     /**
