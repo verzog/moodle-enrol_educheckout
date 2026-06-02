@@ -19,7 +19,11 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        # Pulled via Google's read-only Docker Hub mirror to avoid the
+        # intermittent registry-1.docker.io reachability failures that
+        # otherwise kill service-container startup on GitHub Actions
+        # runners. The image is identical to docker.io/library/postgres:16.6.
+        image: mirror.gcr.io/library/postgres:16.6
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -31,7 +35,7 @@ jobs:
           --health-timeout 5s
           --health-retries 3
       mysql:
-        image: mysql:8.4
+        image: mirror.gcr.io/library/mysql:8.4.3
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
         ports:
@@ -71,50 +75,71 @@ jobs:
 
       - name: Initialise moodle-plugin-ci
         run: |
-          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
+          attempts=0
+          until composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4; do
+            attempts=$((attempts + 1))
+            if [ $attempts -ge 3 ]; then
+              echo "composer create-project failed after $attempts attempts" >&2
+              exit 1
+            fi
+            echo "composer create-project attempt $attempts failed, retrying..."
+            rm -rf ci
+            sleep $((attempts * 5))
+          done
           echo $(cd ci/bin; pwd) >> $GITHUB_PATH
           echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
           sudo locale-gen en_AU.UTF-8
           echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
 
       - name: Install moodle-plugin-ci
-        run: moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
+        id: install
+        run: |
+          attempts=0
+          until moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1; do
+            attempts=$((attempts + 1))
+            if [ $attempts -ge 3 ]; then
+              echo "moodle-plugin-ci install failed after $attempts attempts" >&2
+              exit 1
+            fi
+            echo "moodle-plugin-ci install attempt $attempts failed, retrying..."
+            sleep $((attempts * 10))
+          done
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
 
       - name: PHP Lint
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci phplint
 
       - name: Moodle Code Checker
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci phpcs --max-warnings 0
 
       - name: Moodle PHPDoc Checker
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci phpdoc --max-warnings 0
 
       - name: Validating
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci validate
 
       - name: Check upgrade savepoints
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci savepoints
 
       - name: Mustache Lint
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci mustache
 
       - name: Grunt
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci grunt --max-lint-warnings 0
 
       - name: PHPUnit tests
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci phpunit --fail-on-warning
 
       - name: Behat features
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         run: moodle-plugin-ci behat --profile chrome
