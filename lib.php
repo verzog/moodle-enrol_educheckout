@@ -353,7 +353,13 @@ class enrol_educheckout_plugin extends enrol_plugin {
         $action = $this->get_config('expiredaction', ENROL_EXT_REMOVED_KEEP);
 
         if ($action == ENROL_EXT_REMOVED_UNENROL) {
-            $instances = [];
+            $instanceparams = ['enrol' => 'educheckout'];
+            if ($courseid) {
+                $instanceparams['courseid'] = $courseid;
+            }
+            $instances = $DB->get_records('enrol', $instanceparams, '', '*');
+            $instances = array_column($instances, null, 'id');
+
             $sql = "SELECT ue.*, e.courseid, c.id AS contextid
                       FROM {user_enrolments} ue
                       JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
@@ -362,10 +368,10 @@ class enrol_educheckout_plugin extends enrol_plugin {
                            $coursesql";
             $rs = $DB->get_recordset_sql($sql, $params);
             foreach ($rs as $ue) {
-                if (empty($instances[$ue->enrolid])) {
-                    $instances[$ue->enrolid] = $DB->get_record('enrol', ['id' => $ue->enrolid]);
+                $instance = $instances[$ue->enrolid] ?? null;
+                if (!$instance) {
+                    continue;
                 }
-                $instance = $instances[$ue->enrolid];
                 $ras = ['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0];
                 role_unassign_all($ras, true);
                 $this->unenrol_user($instance, $ue->userid);
@@ -374,7 +380,13 @@ class enrol_educheckout_plugin extends enrol_plugin {
             $rs->close();
             unset($instances);
         } else if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES || $action == ENROL_EXT_REMOVED_SUSPEND) {
-            $instances = [];
+            $instanceparams = ['enrol' => 'educheckout'];
+            if ($courseid) {
+                $instanceparams['courseid'] = $courseid;
+            }
+            $instances = $DB->get_records('enrol', $instanceparams, '', '*');
+            $instances = array_column($instances, null, 'id');
+
             $sql = "SELECT ue.*, e.courseid, c.id AS contextid
                       FROM {user_enrolments} ue
                       JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
@@ -384,10 +396,10 @@ class enrol_educheckout_plugin extends enrol_plugin {
                            $coursesql";
             $rs = $DB->get_recordset_sql($sql, $params);
             foreach ($rs as $ue) {
-                if (empty($instances[$ue->enrolid])) {
-                    $instances[$ue->enrolid] = $DB->get_record('enrol', ['id' => $ue->enrolid]);
+                $instance = $instances[$ue->enrolid] ?? null;
+                if (!$instance) {
+                    continue;
                 }
-                $instance = $instances[$ue->enrolid];
                 if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES) {
                     $ras = ['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0];
                     role_unassign_all($ras, true);
