@@ -353,65 +353,90 @@ class enrol_educheckout_plugin extends enrol_plugin {
         $action = $this->get_config('expiredaction', ENROL_EXT_REMOVED_KEEP);
 
         if ($action == ENROL_EXT_REMOVED_UNENROL) {
-            $instanceparams = ['enrol' => 'educheckout'];
+            // Pre-load only the enrol instances that actually have expiring rows.
+            $idparams = ['now' => $params['now']];
             if ($courseid) {
-                $instanceparams['courseid'] = $courseid;
+                $idparams['courseid'] = $courseid;
             }
-            $instances = $DB->get_records('enrol', $instanceparams, '', '*');
-            $instances = array_column($instances, null, 'id');
+            $enrolids = $DB->get_fieldset_sql(
+                "SELECT DISTINCT ue.enrolid
+                   FROM {user_enrolments} ue
+                   JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
+                  WHERE ue.timeend > 0 AND ue.timeend < :now
+                        $coursesql",
+                $idparams
+            );
+            if (empty($enrolids)) {
+                $trace->output('...no expired educheckout enrolments to remove.');
+            } else {
+                $instances = $DB->get_records_list('enrol', 'id', $enrolids);
 
-            $sql = "SELECT ue.*, e.courseid, c.id AS contextid
-                      FROM {user_enrolments} ue
-                      JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
-                      JOIN {context} c ON (c.instanceid = e.courseid AND c.contextlevel = :courselevel)
-                     WHERE ue.timeend > 0 AND ue.timeend < :now
-                           $coursesql";
-            $rs = $DB->get_recordset_sql($sql, $params);
-            foreach ($rs as $ue) {
-                $instance = $instances[$ue->enrolid] ?? null;
-                if (!$instance) {
-                    continue;
-                }
-                $ras = ['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0];
-                role_unassign_all($ras, true);
-                $this->unenrol_user($instance, $ue->userid);
-                $trace->output("unenrolling expired user $ue->userid from course $instance->courseid", 1);
-            }
-            $rs->close();
-            unset($instances);
-        } else if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES || $action == ENROL_EXT_REMOVED_SUSPEND) {
-            $instanceparams = ['enrol' => 'educheckout'];
-            if ($courseid) {
-                $instanceparams['courseid'] = $courseid;
-            }
-            $instances = $DB->get_records('enrol', $instanceparams, '', '*');
-            $instances = array_column($instances, null, 'id');
-
-            $sql = "SELECT ue.*, e.courseid, c.id AS contextid
-                      FROM {user_enrolments} ue
-                      JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
-                      JOIN {context} c ON (c.instanceid = e.courseid AND c.contextlevel = :courselevel)
-                     WHERE ue.timeend > 0 AND ue.timeend < :now
-                           AND ue.status = :useractive
-                           $coursesql";
-            $rs = $DB->get_recordset_sql($sql, $params);
-            foreach ($rs as $ue) {
-                $instance = $instances[$ue->enrolid] ?? null;
-                if (!$instance) {
-                    continue;
-                }
-                if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES) {
+                $sql = "SELECT ue.*, e.courseid, c.id AS contextid
+                          FROM {user_enrolments} ue
+                          JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
+                          JOIN {context} c ON (c.instanceid = e.courseid AND c.contextlevel = :courselevel)
+                         WHERE ue.timeend > 0 AND ue.timeend < :now
+                               $coursesql";
+                $rs = $DB->get_recordset_sql($sql, $params);
+                foreach ($rs as $ue) {
+                    $instance = $instances[$ue->enrolid] ?? null;
+                    if (!$instance) {
+                        continue;
+                    }
                     $ras = ['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0];
                     role_unassign_all($ras, true);
-                    $this->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
-                    $trace->output("suspending expired user $ue->userid in course $instance->courseid, roles unassigned", 1);
-                } else {
-                    $this->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
-                    $trace->output("suspending expired user $ue->userid in course $instance->courseid, roles kept", 1);
+                    $this->unenrol_user($instance, $ue->userid);
+                    $trace->output("unenrolling expired user $ue->userid from course $instance->courseid", 1);
                 }
+                $rs->close();
+                unset($instances);
             }
-            $rs->close();
-            unset($instances);
+        } else if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES || $action == ENROL_EXT_REMOVED_SUSPEND) {
+            // Pre-load only the enrol instances that actually have expiring active rows.
+            $idparams = ['now' => $params['now'], 'useractive' => ENROL_USER_ACTIVE];
+            if ($courseid) {
+                $idparams['courseid'] = $courseid;
+            }
+            $enrolids = $DB->get_fieldset_sql(
+                "SELECT DISTINCT ue.enrolid
+                   FROM {user_enrolments} ue
+                   JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
+                  WHERE ue.timeend > 0 AND ue.timeend < :now
+                        AND ue.status = :useractive
+                        $coursesql",
+                $idparams
+            );
+            if (empty($enrolids)) {
+                $trace->output('...no expired educheckout enrolments to suspend.');
+            } else {
+                $instances = $DB->get_records_list('enrol', 'id', $enrolids);
+
+                $sql = "SELECT ue.*, e.courseid, c.id AS contextid
+                          FROM {user_enrolments} ue
+                          JOIN {enrol} e ON (e.id = ue.enrolid AND e.enrol = 'educheckout')
+                          JOIN {context} c ON (c.instanceid = e.courseid AND c.contextlevel = :courselevel)
+                         WHERE ue.timeend > 0 AND ue.timeend < :now
+                               AND ue.status = :useractive
+                               $coursesql";
+                $rs = $DB->get_recordset_sql($sql, $params);
+                foreach ($rs as $ue) {
+                    $instance = $instances[$ue->enrolid] ?? null;
+                    if (!$instance) {
+                        continue;
+                    }
+                    if ($action == ENROL_EXT_REMOVED_SUSPENDNOROLES) {
+                        $ras = ['userid' => $ue->userid, 'contextid' => $ue->contextid, 'component' => '', 'itemid' => 0];
+                        role_unassign_all($ras, true);
+                        $this->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
+                        $trace->output("suspending expired user $ue->userid in course $instance->courseid, roles unassigned", 1);
+                    } else {
+                        $this->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
+                        $trace->output("suspending expired user $ue->userid in course $instance->courseid, roles kept", 1);
+                    }
+                }
+                $rs->close();
+                unset($instances);
+            }
         }
 
         $trace->output('...educheckout enrolment updates finished.');
