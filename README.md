@@ -94,6 +94,14 @@ itself is in turn a derivative of Moodle's core **manual enrolment plugin**
 
 Sincere thanks to both for the prior art this codebase is built on.
 
+## Terms of Sale
+
+EduCheckout (trading as Vernon Spain) is the Merchant of Record for
+Marketplace purchases of EduCheckout enrolment and sets the Terms of
+Sale and refund policy. See [TERMS.md](TERMS.md). The plugin itself
+remains free software under GPLv3; the Terms govern only the optional
+convenience-and-goodwill purchase through Moodle Marketplace.
+
 ## License
 
 This program is free software: you can redistribute it and/or modify it under
