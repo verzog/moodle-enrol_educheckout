@@ -43,7 +43,11 @@ receive:
    intact.
 2. **Update delivery** through Marketplace for as long as Marketplace
    continues to carry the plugin and we continue to publish releases.
-3. **Support** through the contact channels in section 13.
+3. **Best-effort bug fixes**, as and when they become available,
+   published through the channels in section 13. This is the only
+   support the purchase carries — we do not undertake to fix any
+   particular issue, to respond within any timeframe, or to provide
+   installation, configuration, customisation, or other assistance.
 4. A clean record-of-purchase invoice/receipt from EduCheckout, useful
    for institutional procurement.
 
@@ -56,6 +60,9 @@ You are **not** buying:
   the non-excludable consumer guarantees described in section 7.
 - A guarantee of future releases. We may stop publishing the plugin;
   see section 6.
+- Any guaranteed support, maintenance, feature development, or committed
+  response time. Bug fixes are provided on a best-effort, as-available
+  basis only, with no obligation to fix any given issue.
 
 ## 3. Price, currency, taxes
 
@@ -94,8 +101,9 @@ at your option.
 - **What you keep after a refund.** Because the software is GPLv3, a
   refund does not — and cannot — revoke your rights to the source. You
   may continue to use, modify, and redistribute any copy you obtained.
-  The refund cancels the Marketplace update channel and the
-  paid-customer support entitlement, nothing more.
+  The refund cancels the Marketplace update channel, nothing more.
+  Best-effort bug fixes stay available to anyone through the public
+  channels in section 13 regardless.
 - **How refunds are paid.** Refunds are issued to the original payment
   method via Marketplace's standard refund flow, or directly by
   EduCheckout where Marketplace cannot.
@@ -112,7 +120,7 @@ at your option.
     downloadable indefinitely (subject to GitHub's continued operation).
 - A withdrawal does not trigger an automatic refund of past purchases.
   The version you installed keeps working forever — only the update
-  channel and support entitlement end.
+  channel ends.
 
 ## 7. Consumer guarantees and limitation of liability
 
@@ -178,7 +186,8 @@ notice.
 - Refund and billing disputes are handled directly between you and
   EduCheckout — **not** through Moodle HQ. Email the address on your
   receipt as the first step.
-- Bug and support disputes follow the support channels in section 13.
+- Bug reports follow the channels in section 13; any fixes are
+  best-effort and as-available.
 - These Terms are governed by the laws of **New South Wales,
   Australia**, and the courts of New South Wales have non-exclusive
   jurisdiction. This does not deprive you of the protection of any
@@ -200,12 +209,12 @@ here as a substantive term, not merely an interpretive aid.
 We may update these Terms for future purchases. The Terms that apply to
 **your** purchase are the ones published in the repository at the
 release tag you installed; later changes do not retroactively alter
-your refund window, your support entitlement, or your GPLv3 rights.
+your refund window or your GPLv3 rights.
 
 ## 13. Contact and support
 
 - Product page and source: <https://github.com/verzog/moodle-enrol_educheckout>
-- Support and bug reports: the issue tracker at
+- Bug reports (fixes are best-effort and as-available): the issue tracker at
   <https://github.com/verzog/moodle-enrol_educheckout/issues>
 - Vendor: EduCheckout / Vernon Spain — <https://educheckout.com>
 - Refunds and billing: the email address shown on your EduCheckout receipt
