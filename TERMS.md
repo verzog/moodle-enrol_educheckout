@@ -216,6 +216,7 @@ your refund window or your GPLv3 rights.
 - Product page and source: <https://github.com/verzog/moodle-enrol_educheckout>
 - Bug reports (fixes are best-effort and as-available): the issue tracker at
   <https://github.com/verzog/moodle-enrol_educheckout/issues>
+- Paid support (optional commercial service): see [SUPPORT.md](SUPPORT.md)
 - Vendor: EduCheckout / Vernon Spain — <https://educheckout.com>
 - Refunds and billing: the email address shown on your EduCheckout receipt
 

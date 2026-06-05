@@ -94,6 +94,14 @@ itself is in turn a derivative of Moodle's core **manual enrolment plugin**
 
 Sincere thanks to both for the prior art this codebase is built on.
 
+## Support
+
+Free community support (best-effort bug fixes) is available through this
+repository's issue tracker. Optional **paid support** — priority response,
+install/upgrade/configuration help, and custom development — is offered by
+EduCheckout as a separate commercial service; see [SUPPORT.md](SUPPORT.md).
+The plugin remains free software under GPLv3 regardless.
+
 ## Terms of Sale
 
 EduCheckout (trading as Vernon Spain) is the Merchant of Record for
