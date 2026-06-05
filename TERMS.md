@@ -43,8 +43,7 @@ receive:
    intact.
 2. **Update delivery** through Marketplace for as long as Marketplace
    continues to carry the plugin and we continue to publish releases.
-3. **Support** per the channels in section 13, including the documented
-   response-time targets for Marketplace customers.
+3. **Support** through the contact channels in section 13.
 4. A clean record-of-purchase invoice/receipt from EduCheckout, useful
    for institutional procurement.
 
@@ -96,7 +95,7 @@ at your option.
   refund does not — and cannot — revoke your rights to the source. You
   may continue to use, modify, and redistribute any copy you obtained.
   The refund cancels the Marketplace update channel and the
-  paid-customer support SLA, nothing more.
+  paid-customer support entitlement, nothing more.
 - **How refunds are paid.** Refunds are issued to the original payment
   method via Marketplace's standard refund flow, or directly by
   EduCheckout where Marketplace cannot.
@@ -113,7 +112,7 @@ at your option.
     downloadable indefinitely (subject to GitHub's continued operation).
 - A withdrawal does not trigger an automatic refund of past purchases.
   The version you installed keeps working forever — only the update
-  channel and SLA end.
+  channel and support entitlement end.
 
 ## 7. Consumer guarantees and limitation of liability
 
